@@ -1,3 +1,4 @@
+"use strict";
 // let str:string = "Hello";
 // let a:number = 20;
 // let exit:boolean = true;
@@ -74,6 +75,6 @@ var Calculator = {
         return a / b;
     },
     showResult: function (number) {
-        parseInt(document.getElementById("result").innerHTML) = number;
+        document.getElementById("result").innerHTML = number;
     }
 };
