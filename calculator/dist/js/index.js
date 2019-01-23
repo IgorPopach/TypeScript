@@ -40,12 +40,14 @@
 // Person.changeAge(18);
 // Person.showAge();
 function onClick() {
-    var a = parseInt(document.getElementsByClassName("number")[0].value);
-    var b = parseInt(document.getElementsByClassName("number")[1].value);
-    var elem = document.getElementById("doing");
-    var doing = elem.options[elem.selectedIndex].value;
+    var inputA = document.getElementsByClassName("number")[0];
+    var a = parseInt(inputA.value);
+    var inputB = document.getElementsByClassName("number")[0];
+    var b = parseInt(inputB.value);
+    var elem = document.getElementById("choose");
+    var choose = elem.options[elem.selectedIndex].value;
     var result;
-    switch (doing) {
+    switch (choose) {
         case "plus":
             result = Calculator.plus(a, b);
             break;
@@ -74,7 +76,7 @@ var Calculator = {
     division: function (a, b) {
         return a / b;
     },
-    showResult: function (number) {
-        document.getElementById("result").innerHTML = number;
+    showResult: function (num) {
+        document.getElementById("result").innerHTML = num.toString();
     }
 };

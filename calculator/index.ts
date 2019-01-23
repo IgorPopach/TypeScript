@@ -51,12 +51,14 @@
 // Person.showAge();
 
 function onClick(): void {
-    let a: number = parseInt(document.getElementsByClassName("number")[0].value);
-    let b: number = parseInt(document.getElementsByClassName("number")[1].value);
-    let elem = document.getElementById("doing");
-    let doing = elem.options[elem.selectedIndex].value;
+    const inputA: HTMLInputElement = <HTMLInputElement>document.getElementsByClassName("number")[0];
+    const a: number = parseInt(inputA.value);
+    const inputB: HTMLInputElement = <HTMLInputElement>document.getElementsByClassName("number")[0];
+    const b: number = parseInt(inputB.value);
+    const elem: any = document.getElementById("choose");
+    const choose: any = elem.options[elem.selectedIndex].value;
     let result:number;
-    switch (doing) {
+    switch (choose) {
         case "plus":
         result = Calculator.plus(a, b);
         break;
@@ -94,7 +96,7 @@ let Calculator: test = {
     division(a:number, b:number):number {
         return a / b
     },
-    showResult(number):void {
-        document.getElementById("result").innerHTML = number;
+    showResult(num):void {
+        document.getElementById("result").innerHTML = num.toString();
     }
 }
