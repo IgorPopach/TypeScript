@@ -1,8 +1,14 @@
 "use strict";
 class localStore {
     writeToStorage(newDog) {
-        let myStorage = window.localStorage;
-        localStorage.setItem('newDog', newDog);
+        const myStorage = window.localStorage;
+        myStorage.setItem('newDog', newDog.toString());
+    }
+    getFromStorage() {
+        const myStorage = window.localStorage;
+        const item = myStorage.getItem('newDog');
+        console.log('typeof(item)', typeof (item));
+        console.log('item', item);
     }
 }
 class Dog extends localStore {
@@ -15,6 +21,12 @@ class Dog extends localStore {
     showDog() {
         console.log(`Name ${this.name} age - ${this.age}`);
     }
+    getName() {
+        return this.name;
+    }
+    getBreed() {
+        return this.breed;
+    }
     getAge() {
         return this.age;
     }
@@ -23,7 +35,7 @@ class Dog extends localStore {
             this.age = newAge;
     }
 }
-let Bobik = new Dog("Bobik", "Tax", 3);
+// let Bobik = new Dog("Bobik", "Tax", 3);
 // Bobik.showDog();
 // console.log('Age',Bobik.getAge());
 // Bobik.setAge(10);
@@ -37,6 +49,9 @@ class HunterDog extends Dog {
         this.power -= 10;
         console.log(`Hunting, power ${this.power}`);
     }
+    getPower() {
+        return this.power;
+    }
     showDog() {
         console.log(`Name ${this.name} age - ${this.age}, power => ${this.power}`);
     }
@@ -47,6 +62,7 @@ class HunterDog extends Dog {
 let Bimbo = new HunterDog('Bimbo', "Boxedr", 5, 100);
 Bimbo.showDog();
 Bimbo.hunt();
+Bimbo.setAge(10);
 Bimbo.showDog();
 HunterDog.static();
 function Add() {
@@ -59,6 +75,11 @@ function Add() {
     const inputD = document.getElementsByTagName("input")[3];
     const d = parseInt(inputD.value);
     const newObjectDog = new HunterDog(a, b, c, d);
-    const newDog = "age:" + newObjectDog.getAge();
+    const newDog = [newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString()];
     console.log('newDog', newDog);
+    newObjectDog.writeToStorage(newDog);
+}
+function ShowLocal() {
+    const store = new localStore;
+    store.getFromStorage();
 }
