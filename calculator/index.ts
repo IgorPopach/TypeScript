@@ -53,11 +53,11 @@
 function onClick(): void {
     const inputA: HTMLInputElement = <HTMLInputElement>document.getElementsByClassName("number")[0];
     const a: number = parseInt(inputA.value);
-    const inputB: HTMLInputElement = <HTMLInputElement>document.getElementsByClassName("number")[0];
+    const inputB: HTMLInputElement = <HTMLInputElement>document.getElementsByClassName("number")[1];
     const b: number = parseInt(inputB.value);
     const elem: any = document.getElementById("choose");
     const choose: any = elem.options[elem.selectedIndex].value;
-    let result:number;
+    let result:number = 0;
     switch (choose) {
         case "plus":
         result = Calculator.plus(a, b);

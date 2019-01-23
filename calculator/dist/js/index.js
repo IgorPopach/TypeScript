@@ -42,11 +42,11 @@
 function onClick() {
     var inputA = document.getElementsByClassName("number")[0];
     var a = parseInt(inputA.value);
-    var inputB = document.getElementsByClassName("number")[0];
+    var inputB = document.getElementsByClassName("number")[1];
     var b = parseInt(inputB.value);
     var elem = document.getElementById("choose");
     var choose = elem.options[elem.selectedIndex].value;
-    var result;
+    var result = 0;
     switch (choose) {
         case "plus":
             result = Calculator.plus(a, b);
