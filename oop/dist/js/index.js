@@ -7,8 +7,23 @@ class localStore {
     getFromStorage() {
         const myStorage = window.localStorage;
         const item = myStorage.getItem('newDog');
-        console.log('typeof(item)', typeof (item));
-        console.log('item', item);
+        return item;
+    }
+    showAllFromStorage() {
+        const myStorage = window.localStorage;
+        const item = myStorage.getItem('newDog');
+        const arrStore = item.split(',');
+        let j = 0;
+        const tag = document.getElementsByClassName('show')[0];
+        tag.innerHTML = "";
+        for (let i = 0; i < arrStore.length / 4; i++) {
+            let arrFilter = arrStore.slice(j, j + 4);
+            j += 4;
+            const newP = document.createElement('p');
+            const text = `Name: ${arrFilter[0]}, breed - ${arrFilter[1]}, age - ${arrFilter[2]}, power - ${arrFilter[3]}`;
+            newP.appendChild(document.createTextNode(text));
+            tag.appendChild(newP);
+        }
     }
 }
 class Dog extends localStore {
@@ -75,11 +90,22 @@ function Add() {
     const inputD = document.getElementsByTagName("input")[3];
     const d = parseInt(inputD.value);
     const newObjectDog = new HunterDog(a, b, c, d);
-    const newDog = [newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString()];
-    console.log('newDog', newDog);
-    newObjectDog.writeToStorage(newDog);
+    const newDog = [];
+    newDog.push(newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString());
+    const store = new localStore;
+    const getStore = store.getFromStorage();
+    if (getStore !== null) {
+        let arrStore = [];
+        arrStore = getStore.split(',');
+        console.log('typeof(arrStore)', typeof (arrStore), arrStore);
+        arrStore.push(newDog);
+        newObjectDog.writeToStorage(arrStore);
+    }
+    else {
+        newObjectDog.writeToStorage(newDog);
+    }
 }
 function ShowLocal() {
     const store = new localStore;
-    store.getFromStorage();
+    store.showAllFromStorage();
 }
