@@ -2,28 +2,12 @@
 class localStore {
     writeToStorage(newDog) {
         const myStorage = window.localStorage;
-        myStorage.setItem('newDog', newDog.toString());
+        myStorage.setItem('Dogs', JSON.stringify(newDog));
     }
     getFromStorage() {
         const myStorage = window.localStorage;
-        const item = myStorage.getItem('newDog');
-        return item;
-    }
-    showAllFromStorage() {
-        const myStorage = window.localStorage;
-        const item = myStorage.getItem('newDog');
-        const arrStore = item.split(',');
-        let j = 0;
-        const tag = document.getElementsByClassName('show')[0];
-        tag.innerHTML = "";
-        for (let i = 0; i < arrStore.length / 4; i++) {
-            let arrFilter = arrStore.slice(j, j + 4);
-            j += 4;
-            const newP = document.createElement('p');
-            const text = `Name: ${arrFilter[0]}, breed - ${arrFilter[1]}, age - ${arrFilter[2]}, power - ${arrFilter[3]}`;
-            newP.appendChild(document.createTextNode(text));
-            tag.appendChild(newP);
-        }
+        const dogs = JSON.parse(myStorage.getItem('Dogs'));
+        return dogs;
     }
 }
 class Dog extends localStore {
@@ -93,19 +77,25 @@ function Add() {
     const newDog = [];
     newDog.push(newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString());
     const store = new localStore;
-    const getStore = store.getFromStorage();
-    if (getStore !== null) {
-        let arrStore = [];
-        arrStore = getStore.split(',');
-        console.log('typeof(arrStore)', typeof (arrStore), arrStore);
-        arrStore.push(newDog);
-        newObjectDog.writeToStorage(arrStore);
+    let Store = store.getFromStorage();
+    if (Store !== null) {
+        Store.push(newDog);
+        console.log('typeof(Store)', typeof (Store), Store);
+        newObjectDog.writeToStorage(Store);
     }
     else {
-        newObjectDog.writeToStorage(newDog);
+        newObjectDog.writeToStorage([newDog]);
     }
 }
 function ShowLocal() {
-    const store = new localStore;
-    store.showAllFromStorage();
+    const store = new HunterDog('a', 'a', 1, 1);
+    const dogs = store.getFromStorage();
+    const tag = document.getElementsByClassName('show')[0];
+    tag.innerHTML = "";
+    dogs.forEach((e) => {
+        const newP = document.createElement('p');
+        const text = `Name: ${e[0]}, breed - ${e[1]}, age - ${e[2]}, power - ${e[3]}`;
+        newP.appendChild(document.createTextNode(text));
+        tag.appendChild(newP);
+    });
 }
