@@ -73,18 +73,23 @@ function Add() {
     const c = parseInt(inputC.value);
     const inputD = document.getElementsByTagName("input")[3];
     const d = parseInt(inputD.value);
-    const newObjectDog = new HunterDog(a, b, c, d);
-    const newDog = [];
-    newDog.push(newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString());
-    const store = new localStore;
-    let Store = store.getFromStorage();
-    if (Store !== null) {
-        Store.push(newDog);
-        console.log('typeof(Store)', typeof (Store), Store);
-        newObjectDog.writeToStorage(Store);
+    console.log('a, b, c, d', a, b, c, d);
+    if (a === '' || b === '' || c == NaN || d == NaN) {
+        alert("PLease input all values!");
     }
     else {
-        newObjectDog.writeToStorage([newDog]);
+        const newObjectDog = new HunterDog(a, b, c, d);
+        const newDog = [];
+        newDog.push(newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString());
+        let Store = newObjectDog.getFromStorage();
+        if (Store !== null) {
+            Store.push(newDog);
+            console.log('typeof(Store)', typeof (Store), Store);
+            newObjectDog.writeToStorage(Store);
+        }
+        else {
+            newObjectDog.writeToStorage([newDog]);
+        }
     }
 }
 function ShowLocal() {

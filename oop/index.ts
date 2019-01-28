@@ -1,4 +1,4 @@
-class localStore {
+abstract class localStore {
     public writeToStorage(newDog: string[][]): void {
         const myStorage = window.localStorage;
         myStorage.setItem('Dogs', JSON.stringify(newDog));
@@ -83,17 +83,21 @@ function Add(): void {
     const c: number = parseInt(inputC.value);
     const inputD: HTMLInputElement = <HTMLInputElement>document.getElementsByTagName("input")[3];
     const d: number = parseInt(inputD.value);
-    const newObjectDog = new HunterDog(a, b, c, d);
-    const newDog: string[] = [];
-    newDog.push(newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString());
-    const store = new localStore;
-    let Store: any | null = store.getFromStorage();
-    if (Store !== null) {
-        Store.push(newDog);
-        console.log('typeof(Store)', typeof (Store), Store)
-        newObjectDog.writeToStorage(Store)
+    console.log('a, b, c, d', a, b, c, d)
+    if (a === '' || b === '' || c == NaN || d == NaN) {
+        alert("PLease input all values!")
     } else {
-        newObjectDog.writeToStorage([newDog])
+        const newObjectDog = new HunterDog(a, b, c, d);
+        const newDog: string[] = [];
+        newDog.push(newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString());
+        let Store: any | null = newObjectDog.getFromStorage();
+        if (Store !== null) {
+            Store.push(newDog);
+            console.log('typeof(Store)', typeof (Store), Store)
+            newObjectDog.writeToStorage(Store)
+        } else {
+            newObjectDog.writeToStorage([newDog])
+        }
     }
 }
 
