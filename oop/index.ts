@@ -7,13 +7,13 @@ interface IAnimal {
 }
 
 abstract class localStore {
-    public writeToStorage(newAnimal: string[][], type: string): void {
+    public writeToStorage(newAnimal: string[][]): void {
         const myStorage = window.localStorage;
-        myStorage.setItem(type, JSON.stringify(newAnimal));
+        myStorage.setItem("animals", JSON.stringify(newAnimal));
     }
-    public getFromStorage(type: string) {
+    public static getFromStorage() {
         const myStorage: any = window.localStorage;
-        const animals: any = JSON.parse(myStorage.getItem(type));
+        const animals: any = JSON.parse(myStorage.getItem("animals"));
         return animals;
     }
 }
@@ -86,7 +86,7 @@ class HunterDog extends Dog {
         return this.power;
     }
     public showDog(): void {
-        console.log(`Name ${this.name} age - ${this.age}, power => ${this.power}`);
+        console.log(`${this.type} Name ${this.name} age - ${this.age}, power => ${this.power}`);
     }
     public static static(): void {
         console.log('static');
@@ -127,7 +127,7 @@ abstract class Cat extends localStore implements IAnimal {
         console.log("Dog static")
     }
     showInfo(): void {
-        console.log(`${this.name} ${this.type} ${this.breed} ${this.age}`);
+        console.log(`${this.type} ${this.name} ${this.type} ${this.breed} ${this.age}`);
     }
     outdoor(): void {
         console.log(`Cat ${this.name} want to go outdoor!!!`);
@@ -139,28 +139,29 @@ abstract class Cat extends localStore implements IAnimal {
 
 class homeCat extends Cat {
     type: string = "Home cat";
-    private active: number;
-    constructor(name: string, breed: string, age: number, active: number) {
+    private activity: number;
+    constructor(name: string, breed: string, age: number, activity: number) {
         super(name, breed, age);
-        this.active = active;
+        this.activity = activity;
     }
     public sleeping(): void {
-        this.active += 20;
-        console.log(`Sleeping, active ${this.active}`)
-        if (this.active >= 100) {
+        this.activity += 20;
+        console.log(`Sleeping, activity ${this.activity}`)
+        if (this.activity >= 100) {
             this.outdoor();
         }
     }
-    public getActive(): number {
-        return this.active;
+    public getactivity(): number {
+        return this.activity;
     }
     public showCat(): void {
-        console.log(`Name ${this.name} age - ${this.age}, active => ${this.active}`);
+        console.log(`${this.type} Name ${this.name} age - ${this.age}, activity => ${this.activity}`);
     }
 }
 
-let Bimbo = new HunterDog('Bimbo', "Boxedr", 12, 20);
-
+// let Bimbo = new HunterDog('Bimbo', "Boxedr", 12, 20);
+// let Bimbo = new homeCat('Bimbo', "Boxedr", 12, 20);
+// Bimbo.showCat();
 // Bimbo.showDog();
 // Bimbo.hunt();
 // Bimbo.showDog();
@@ -186,65 +187,101 @@ function genericType<T>(data: T): T {
 console.log('genericType', genericType('test').length);
 console.log('genericType', genericType(10).length);
 
+const addButton: HTMLInputElement = <HTMLInputElement>document.getElementsByClassName("Add")[0];
+addButton.addEventListener("click", Add);
+
 function Add(): void {
     const inputA: HTMLInputElement = <HTMLInputElement>document.getElementsByTagName("input")[0];
-    const a: string = inputA.value;
+    const name: string = inputA.value;
     const inputB: HTMLInputElement = <HTMLInputElement>document.getElementsByTagName("input")[1];
-    const b: string = inputB.value;
+    const breed: string = inputB.value;
     const inputC: HTMLInputElement = <HTMLInputElement>document.getElementsByTagName("input")[2];
-    const c: number = parseInt(inputC.value);
-    const inputD: HTMLInputElement = <HTMLInputElement>document.getElementsByTagName("input")[3];
-    const d: number = parseInt(inputD.value);
-    if (a === '' || b === '' || inputC.value == '' || inputD.value == '') {
+    const age: number = parseInt(inputC.value);
+    const inputActive: HTMLInputElement = <HTMLInputElement>document.getElementsByTagName("input")[3];
+    const activeValue: number = parseInt(inputActive.value);
+    if (name === '' || breed === '' || inputC.value == '' || inputActive.value == '') {
         alert("PLease input all values!")
-    } else {
+    }
+    if (typeof(parseInt(name)) === "number" || typeof(parseInt(breed)) === "number") {
+        alert("Name & breed must be a text")
+    }
+    else {
         const elem: any = document.getElementById("choose-type");
         const choose: any = elem.options[elem.selectedIndex].value;
         switch (choose) {
             case "dog":
-                const newObjectDog = new HunterDog(a, b, c, d);
+                const newObjectDog = new HunterDog(name, breed, age, activeValue);
                 const newDog: string[] = [];
-                newDog.push(newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString());
-                let DogStore: any | null = newObjectDog.getFromStorage(newObjectDog.getType());
+                newDog.push(newObjectDog.getType(), newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString());
+                let DogStore: any | null = localStore.getFromStorage();
                 if (DogStore !== null) {
                     DogStore.push(newDog);
                     console.log('typeof(Store)', typeof (DogStore), DogStore)
-                    newObjectDog.writeToStorage(DogStore, newObjectDog.getType())
+                    newObjectDog.writeToStorage(DogStore)
                 } else {
-                    newObjectDog.writeToStorage([newDog], newObjectDog.getType())
+                    newObjectDog.writeToStorage([newDog])
                 }
                 break;
             case "cat":
-                const newObjectCat = new HunterDog(a, b, c, d);
+                const newObjectCat = new homeCat(name, breed, age, activeValue);
                 const newCat: string[] = [];
-                newCat.push(newObjectCat.getName(), newObjectCat.getBreed(), newObjectCat.getAge().toString(), newObjectCat.getPower().toString());
-                let CatStore: any | null = newObjectCat.getFromStorage(newObjectCat.getType());
+                newCat.push(newObjectCat.getType(), newObjectCat.getName(), newObjectCat.getBreed(), newObjectCat.getAge().toString(), newObjectCat.getactivity().toString());
+                let CatStore: any | null = localStore.getFromStorage();
                 if (CatStore !== null) {
                     CatStore.push(newCat);
                     console.log('typeof(CatStore)', typeof (CatStore), CatStore)
-                    newObjectCat.writeToStorage(CatStore, newObjectCat.getType())
+                    newObjectCat.writeToStorage(CatStore)
                 } else {
-                    newObjectCat.writeToStorage([newCat], newObjectCat.getType())
+                    newObjectCat.writeToStorage([newCat])
                 }
                 break;
         }
     }
 }
 
+const showLocalButton: HTMLInputElement = <HTMLInputElement>document.getElementsByClassName("ShowButton")[0];
+showLocalButton.addEventListener("click", ShowLocal);
+
 function ShowLocal(): void {
-    const store = new HunterDog('a', 'a', 1, 1);
-    const dogs: any = store.getFromStorage();
+    const allStorage: any = localStore.getFromStorage();
     const tag: HTMLDivElement = <HTMLDivElement>document.getElementsByClassName('show')[0];
     tag.innerHTML = "";
-    dogs.forEach((e: string[]) => {
-        const newP: HTMLParagraphElement = document.createElement('p');
-        const text = `Name: ${e[0]}, breed - ${e[1]}, age - ${e[2]}, power - ${e[3]}`;
-        newP.appendChild(document.createTextNode(text))
-        tag.appendChild(newP)
-    });
-}
-
-function getAnimal(): void {
-
+    const elem: any = document.getElementById("choose-show");
+    const choose: any = elem.options[elem.selectedIndex].value;
+    switch (choose) {
+        case "dog":
+            const filterArrDog = allStorage.filter((arr: string[]) => {
+                return arr[0] === "Hunter Dog"
+            }
+            )
+            filterArrDog.forEach((e: string[]) => {
+                const newP: HTMLParagraphElement = document.createElement('p');
+                const text = `Type: ${e[0]}, Name: ${e[1]}, breed - ${e[2]}, age - ${e[3]}, power - ${e[4]}`;
+                newP.appendChild(document.createTextNode(text))
+                tag.appendChild(newP)
+            });
+            break;
+        case "cat":
+            const filterArrCat = allStorage.filter((arr: string[]) => {
+                return arr[0] === "Home cat"
+            }
+            )
+            console.log('arr', filterArrCat)
+            filterArrCat.forEach((e: string[]) => {
+                const newP: HTMLParagraphElement = document.createElement('p');
+                const text = `Type: ${e[0]}, Name: ${e[1]}, breed - ${e[2]}, age - ${e[3]}, activity - ${e[4]}`;
+                newP.appendChild(document.createTextNode(text))
+                tag.appendChild(newP)
+            });
+            break;
+        case "all":
+            allStorage.forEach((e: string[]) => {
+                const newP: HTMLParagraphElement = document.createElement('p');
+                const text = `Type: ${e[0]}, Name: ${e[1]}, breed - ${e[2]}, age - ${e[3]}, activity - ${e[4]}`;
+                newP.appendChild(document.createTextNode(text))
+                tag.appendChild(newP)
+            });
+            break;
+    }
 }
 

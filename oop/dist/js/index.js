@@ -1,12 +1,12 @@
 "use strict";
 class localStore {
-    writeToStorage(newAnimal, type) {
+    writeToStorage(newAnimal) {
         const myStorage = window.localStorage;
-        myStorage.setItem(type, JSON.stringify(newAnimal));
+        myStorage.setItem("animals", JSON.stringify(newAnimal));
     }
-    getFromStorage(type) {
+    static getFromStorage() {
         const myStorage = window.localStorage;
-        const animals = JSON.parse(myStorage.getItem(type));
+        const animals = JSON.parse(myStorage.getItem("animals"));
         return animals;
     }
 }
@@ -70,7 +70,7 @@ class HunterDog extends Dog {
         return this.power;
     }
     showDog() {
-        console.log(`Name ${this.name} age - ${this.age}, power => ${this.power}`);
+        console.log(`${this.type} Name ${this.name} age - ${this.age}, power => ${this.power}`);
     }
     static static() {
         console.log('static');
@@ -107,7 +107,7 @@ class Cat extends localStore {
         console.log("Dog static");
     }
     showInfo() {
-        console.log(`${this.name} ${this.type} ${this.breed} ${this.age}`);
+        console.log(`${this.type} ${this.name} ${this.type} ${this.breed} ${this.age}`);
     }
     outdoor() {
         console.log(`Cat ${this.name} want to go outdoor!!!`);
@@ -117,26 +117,28 @@ class Cat extends localStore {
     }
 }
 class homeCat extends Cat {
-    constructor(name, breed, age, active) {
+    constructor(name, breed, age, activity) {
         super(name, breed, age);
         this.type = "Home cat";
-        this.active = active;
+        this.activity = activity;
     }
     sleeping() {
-        this.active += 20;
-        console.log(`Sleeping, active ${this.active}`);
-        if (this.active >= 100) {
+        this.activity += 20;
+        console.log(`Sleeping, activity ${this.activity}`);
+        if (this.activity >= 100) {
             this.outdoor();
         }
     }
-    getActive() {
-        return this.active;
+    getactivity() {
+        return this.activity;
     }
     showCat() {
-        console.log(`Name ${this.name} age - ${this.age}, active => ${this.active}`);
+        console.log(`${this.type} Name ${this.name} age - ${this.age}, activity => ${this.activity}`);
     }
 }
-let Bimbo = new HunterDog('Bimbo', "Boxedr", 12, 20);
+// let Bimbo = new HunterDog('Bimbo', "Boxedr", 12, 20);
+// let Bimbo = new homeCat('Bimbo', "Boxedr", 12, 20);
+// Bimbo.showCat();
 // Bimbo.showDog();
 // Bimbo.hunt();
 // Bimbo.showDog();
@@ -158,64 +160,97 @@ function genericType(data) {
 }
 console.log('genericType', genericType('test').length);
 console.log('genericType', genericType(10).length);
+const addButton = document.getElementsByClassName("Add")[0];
+addButton.addEventListener("click", Add);
 function Add() {
     const inputA = document.getElementsByTagName("input")[0];
-    const a = inputA.value;
+    const name = inputA.value;
     const inputB = document.getElementsByTagName("input")[1];
-    const b = inputB.value;
+    const breed = inputB.value;
     const inputC = document.getElementsByTagName("input")[2];
-    const c = parseInt(inputC.value);
-    const inputD = document.getElementsByTagName("input")[3];
-    const d = parseInt(inputD.value);
-    if (a === '' || b === '' || inputC.value == '' || inputD.value == '') {
+    const age = parseInt(inputC.value);
+    const inputActive = document.getElementsByTagName("input")[3];
+    const activeValue = parseInt(inputActive.value);
+    if (name === '' || breed === '' || inputC.value == '' || inputActive.value == '') {
         alert("PLease input all values!");
+    }
+    if (typeof (parseInt(name)) === "number" || typeof (parseInt(breed)) === "number") {
+        alert("Name & breed must be a text");
     }
     else {
         const elem = document.getElementById("choose-type");
         const choose = elem.options[elem.selectedIndex].value;
         switch (choose) {
             case "dog":
-                const newObjectDog = new HunterDog(a, b, c, d);
+                const newObjectDog = new HunterDog(name, breed, age, activeValue);
                 const newDog = [];
-                newDog.push(newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString());
-                let DogStore = newObjectDog.getFromStorage(newObjectDog.getType());
+                newDog.push(newObjectDog.getType(), newObjectDog.getName(), newObjectDog.getBreed(), newObjectDog.getAge().toString(), newObjectDog.getPower().toString());
+                let DogStore = localStore.getFromStorage();
                 if (DogStore !== null) {
                     DogStore.push(newDog);
                     console.log('typeof(Store)', typeof (DogStore), DogStore);
-                    newObjectDog.writeToStorage(DogStore, newObjectDog.getType());
+                    newObjectDog.writeToStorage(DogStore);
                 }
                 else {
-                    newObjectDog.writeToStorage([newDog], newObjectDog.getType());
+                    newObjectDog.writeToStorage([newDog]);
                 }
                 break;
             case "cat":
-                const newObjectCat = new HunterDog(a, b, c, d);
+                const newObjectCat = new homeCat(name, breed, age, activeValue);
                 const newCat = [];
-                newCat.push(newObjectCat.getName(), newObjectCat.getBreed(), newObjectCat.getAge().toString(), newObjectCat.getPower().toString());
-                let CatStore = newObjectCat.getFromStorage(newObjectCat.getType());
+                newCat.push(newObjectCat.getType(), newObjectCat.getName(), newObjectCat.getBreed(), newObjectCat.getAge().toString(), newObjectCat.getactivity().toString());
+                let CatStore = localStore.getFromStorage();
                 if (CatStore !== null) {
                     CatStore.push(newCat);
                     console.log('typeof(CatStore)', typeof (CatStore), CatStore);
-                    newObjectCat.writeToStorage(CatStore, newObjectCat.getType());
+                    newObjectCat.writeToStorage(CatStore);
                 }
                 else {
-                    newObjectCat.writeToStorage([newCat], newObjectCat.getType());
+                    newObjectCat.writeToStorage([newCat]);
                 }
                 break;
         }
     }
 }
+const showLocalButton = document.getElementsByClassName("ShowButton")[0];
+showLocalButton.addEventListener("click", ShowLocal);
 function ShowLocal() {
-    const store = new HunterDog('a', 'a', 1, 1);
-    const dogs = store.getFromStorage();
+    const allStorage = localStore.getFromStorage();
     const tag = document.getElementsByClassName('show')[0];
     tag.innerHTML = "";
-    dogs.forEach((e) => {
-        const newP = document.createElement('p');
-        const text = `Name: ${e[0]}, breed - ${e[1]}, age - ${e[2]}, power - ${e[3]}`;
-        newP.appendChild(document.createTextNode(text));
-        tag.appendChild(newP);
-    });
-}
-function getAnimal() {
+    const elem = document.getElementById("choose-show");
+    const choose = elem.options[elem.selectedIndex].value;
+    switch (choose) {
+        case "dog":
+            const filterArrDog = allStorage.filter((arr) => {
+                return arr[0] === "Hunter Dog";
+            });
+            filterArrDog.forEach((e) => {
+                const newP = document.createElement('p');
+                const text = `Type: ${e[0]}, Name: ${e[1]}, breed - ${e[2]}, age - ${e[3]}, power - ${e[4]}`;
+                newP.appendChild(document.createTextNode(text));
+                tag.appendChild(newP);
+            });
+            break;
+        case "cat":
+            const filterArrCat = allStorage.filter((arr) => {
+                return arr[0] === "Home cat";
+            });
+            console.log('arr', filterArrCat);
+            filterArrCat.forEach((e) => {
+                const newP = document.createElement('p');
+                const text = `Type: ${e[0]}, Name: ${e[1]}, breed - ${e[2]}, age - ${e[3]}, activity - ${e[4]}`;
+                newP.appendChild(document.createTextNode(text));
+                tag.appendChild(newP);
+            });
+            break;
+        case "all":
+            allStorage.forEach((e) => {
+                const newP = document.createElement('p');
+                const text = `Type: ${e[0]}, Name: ${e[1]}, breed - ${e[2]}, age - ${e[3]}, activity - ${e[4]}`;
+                newP.appendChild(document.createTextNode(text));
+                tag.appendChild(newP);
+            });
+            break;
+    }
 }

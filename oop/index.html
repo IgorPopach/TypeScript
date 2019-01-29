@@ -1,28 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
+
 <body>
     <div>
-        <input type="text" name="name" placeholder="name"/>
-        <input type="text" name="breed" placeholder="breed"/>
-        <input type="number" name="age" placeholder="age"/>
-        <input type="number" name="power" placeholder="power"/>
+        <input type="text" name="name" placeholder="name" />
+        <input type="text" name="breed" placeholder="breed" />
+        <input type="number" name="age" placeholder="age" />
         <select id="choose-type">
             <option value="dog">Dog</option>
             <option value="cat">Cat</option>
         </select>
+        <input type="number" name="power" placeholder="power/activity" />
+        <button class="Add">Add</button>
     </div>
     <div>
-        <button onclick="Add()">Add</button>
-        <button onclick="ShowLocal()">ShowLocal</button>
+        <select id="choose-show">
+            <option value="dog">Dog</option>
+            <option value="cat">Cat</option>
+            <option value="all">All</option>
+        </select>
+        <button class="ShowButton">ShowLocal</button>
     </div>
     <div class="show">
     </div>
     <script src="./dist/js/index.js"></script>
 </body>
+
 </html>
